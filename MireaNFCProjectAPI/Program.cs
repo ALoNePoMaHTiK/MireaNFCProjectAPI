@@ -7,6 +7,9 @@ string connectionString = "Server=msuniversity.ru,1450;Database=nfcattend;TrustS
 
 // Add services to the container.
 builder.Services.AddDbContextFactory<TagContext>(o => o.UseSqlServer(connectionString));
+builder.Services.AddDbContextFactory<UserContext>(o => o.UseSqlServer(connectionString));
+builder.Services.AddDbContextFactory<GroupContext>(o => o.UseSqlServer(connectionString));
+builder.Services.AddDbContextFactory<StudentContext>(o => o.UseSqlServer(connectionString));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

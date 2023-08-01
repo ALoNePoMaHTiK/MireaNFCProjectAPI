@@ -6,5 +6,6 @@
         public DateTime PlacementDateTime { get; set; }
         public short RoomId { get; set; }
         public string Note { get; set; }
+        public bool IsActive { get; set; }
     }
 }
