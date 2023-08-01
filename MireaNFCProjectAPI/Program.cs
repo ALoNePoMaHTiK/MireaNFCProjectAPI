@@ -3,15 +3,16 @@ using MireaNFCProjectAPI.Contexts;
 using MireaNFCProjectAPI.Models;
 
 var builder = WebApplication.CreateBuilder(args);
-string connectionString = "Server=POMAHTIK-PC\\SQLEXPRESS;Database=NFCProject;Trusted_Connection=True;TrustServerCertificate=True;";
+string connectionString = "Server=msuniversity.ru,1450;Database=nfcattend;TrustServerCertificate=True;User Id=nfcattend;Password=nfcattend;";
 
 // Add services to the container.
 builder.Services.AddDbContextFactory<TagContext>(o => o.UseSqlServer(connectionString));
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddCors();
 
 var app = builder.Build();
 
@@ -24,7 +25,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+//app.UseAuthorization();
 
 app.MapControllers();
 
