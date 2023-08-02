@@ -5,6 +5,7 @@ using MireaNFCProjectAPI.Models;
 
 namespace MireaNFCProjectAPI.Controllers
 {
+    [ApiKey]
     [Route("api/[controller]")]
     [ApiController]
     public class StudentsController

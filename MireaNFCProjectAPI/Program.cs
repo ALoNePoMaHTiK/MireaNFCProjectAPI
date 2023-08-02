@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.OpenApi.Models;
 using MireaNFCProjectAPI.Contexts;
 using MireaNFCProjectAPI.Models;
 
@@ -13,7 +15,26 @@ builder.Services.AddDbContextFactory<StudentContext>(o => o.UseSqlServer(connect
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen( c =>
+{
+    c.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+    {
+        Description = "ApiKey must appear in header",
+        Type = SecuritySchemeType.ApiKey,
+        Name = "X-API-KEY",
+        In = ParameterLocation.Header,
+        Scheme = "ApiKeyScheme"
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement{{ 
+            new OpenApiSecurityScheme(){
+            Reference = new OpenApiReference
+            {
+                Type = ReferenceType.SecurityScheme,
+                Id = "ApiKey"
+            },
+            In = ParameterLocation.Header
+    }, new List<string>()}});
+});
 
 builder.Services.AddCors();
 
