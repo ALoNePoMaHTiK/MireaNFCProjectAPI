@@ -22,6 +22,9 @@ namespace MireaNFCProjectAPI.Controllers
             return await context.Tags.ToListAsync();
         }
 
+        /// <summary>
+        /// Получение NFC-метки по серийному номеру
+        /// </summary>
         [HttpGet("{id}")]
         public async Task<Tag> Get(string id)
         {
@@ -29,6 +32,9 @@ namespace MireaNFCProjectAPI.Controllers
             return await context.Tags.FindAsync(id);
         }
 
+        /// <summary>
+        /// Получение списка NFC-меток по идентификатору аудитории
+        /// </summary>
         [HttpGet("ByRoomId/{roomId}")]
         public async Task<IEnumerable<Tag>> GetByRoomId(short roomId)
         {

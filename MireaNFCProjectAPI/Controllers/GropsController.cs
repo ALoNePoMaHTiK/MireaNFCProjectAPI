@@ -22,12 +22,20 @@ namespace MireaNFCProjectAPI.Controllers
             var context = await _contextFactory.CreateDbContextAsync();
             return await context.Groups.ToListAsync();
         }
+
+        /// <summary>
+        /// Получение группы по идентификатору (интернациональное наименование)
+        /// </summary>
         [HttpGet("{id}")]
         public async Task<Group> Get(string id)
         {
             var context = await _contextFactory.CreateDbContextAsync();
             return await context.Groups.FindAsync(id);
         }
+
+        /// <summary>
+        /// Получение группы по названию (русское именование)
+        /// </summary>
         [HttpGet("ByName/{title}")]
         public async Task<Group> GetByName(string title)
         {
@@ -35,6 +43,9 @@ namespace MireaNFCProjectAPI.Controllers
             return await context.Groups.Where(n => n.Title == title).FirstAsync();
         }
 
+        /// <summary>
+        /// Получение списка групп по идентификатору института
+        /// </summary>
         [HttpGet("ByInstitute/{id}")]
         public async Task<Group> GetByInstitute(byte instituteId)
         {
@@ -42,6 +53,9 @@ namespace MireaNFCProjectAPI.Controllers
             return await context.Groups.Where(n => n.InstituteId == instituteId).FirstAsync();
         }
 
+        /// <summary>
+        /// Добавление новой группы
+        /// </summary>
         [HttpPost]
         public async Task<Group> Create([FromBody] Group group)
         {

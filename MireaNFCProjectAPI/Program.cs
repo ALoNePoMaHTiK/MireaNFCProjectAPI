@@ -12,6 +12,8 @@ builder.Services.AddDbContextFactory<TagContext>(o => o.UseSqlServer(connectionS
 builder.Services.AddDbContextFactory<UserContext>(o => o.UseSqlServer(connectionString));
 builder.Services.AddDbContextFactory<GroupContext>(o => o.UseSqlServer(connectionString));
 builder.Services.AddDbContextFactory<StudentContext>(o => o.UseSqlServer(connectionString));
+builder.Services.AddDbContextFactory<RoomContext>(o => o.UseSqlServer(connectionString));
+builder.Services.AddDbContextFactory<CheckoutContext>(o => o.UseSqlServer(connectionString));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -37,6 +39,19 @@ builder.Services.AddSwaggerGen( c =>
 });
 
 builder.Services.AddCors();
+
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1",
+        new OpenApiInfo
+        {
+            Title = "MIREA NFCProject API - V1",
+            Version = "v1"
+        }
+     );
+
+    c.IncludeXmlComments("obj\\Debug\\net6.0\\MireaNFCProjectAPI.xml");
+});
 
 var app = builder.Build();
 
