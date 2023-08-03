@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using MireaNFCProjectAPI.Contexts;
 using MireaNFCProjectAPI.Models;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace MireaNFCProjectAPI.Controllers
 {
@@ -28,6 +30,20 @@ namespace MireaNFCProjectAPI.Controllers
             return await context.Students.FindAsync(id);
         }
 
+        [HttpPost("Auth/")]
+        public async Task<ActionResult<Student>> GetByAuth([FromBody] AuthData authData)
+        {
+            var context = await _contextFactory.CreateDbContextAsync();
+            Student s = await context.Students.Where(s => s.Email == authData.Email).FirstOrDefaultAsync();
+            string hash = "";
+            if (s != null)
+                hash = GetHash(authData.Password);
+            if (s == null || s.Password != hash)
+                return new NotFoundResult();
+            else
+                return new OkObjectResult(s);
+        }
+
         [HttpGet("ByGroup/{groupId}")]
         public async Task<IEnumerable<Student>> GetByGroup(string groupId)
         {
@@ -39,6 +55,7 @@ namespace MireaNFCProjectAPI.Controllers
         public async Task<Student> Create([FromBody] Student student)
         {
             var context = await _contextFactory.CreateDbContextAsync();
+            student.Password = GetHash(student.Password);
             context.Add(student);
             await context.SaveChangesAsync();
             return student;
@@ -57,6 +74,15 @@ namespace MireaNFCProjectAPI.Controllers
                 studentToUpdate.Password = studentToUpdate.Password;
             }
             await context.SaveChangesAsync();
+        }
+
+        static private string GetHash(string message)
+        {
+            using (SHA512 sha512 = SHA512.Create())
+            {
+                byte[] hashValue = sha512.ComputeHash(Encoding.UTF8.GetBytes(message));
+                return Convert.ToHexString(hashValue);
+            }
         }
     }
 }
