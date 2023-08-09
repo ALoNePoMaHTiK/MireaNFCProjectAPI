@@ -10,11 +10,11 @@ namespace MireaNFCProjectAPI.Controllers
     [ApiKey]
     [Route("api/[controller]")]
     [ApiController]
-    public class CheckoutsConteoller : ControllerBase
+    public class CheckoutsController : ControllerBase
     {
         IDbContextFactory<CheckoutContext> _contextFactory;
 
-        public CheckoutsConteoller(IDbContextFactory<CheckoutContext> contextFactory) => _contextFactory = contextFactory;
+        public CheckoutsController(IDbContextFactory<CheckoutContext> contextFactory) => _contextFactory = contextFactory;
 
         [HttpGet]
         public async Task<IEnumerable<Checkout>> GetAll()
@@ -36,12 +36,13 @@ namespace MireaNFCProjectAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<Group> Create([FromBody] Group group)
+        public async Task<Checkout> Create([FromBody] Checkout checkout)
         {
             var context = await _contextFactory.CreateDbContextAsync();
-            context.Add(group);
+            checkout.CheckoutDateTime = DateTime.Now;
+            context.Add(checkout);
             await context.SaveChangesAsync();
-            return group;
+            return checkout;
         }
     }
 }

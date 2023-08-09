@@ -30,6 +30,13 @@ namespace MireaNFCProjectAPI.Controllers
             return await context.Students.FindAsync(id);
         }
 
+        [HttpGet("ByIsAcceptRequested/{isAcceptRequested}")]
+        public async Task<IEnumerable<Student>> GetByIsAcceptRequested(bool isAcceptRequested)
+        {
+            var context = await _contextFactory.CreateDbContextAsync();
+            return await context.Students.Where(s => s.IsAcceptRequested == isAcceptRequested).ToListAsync();
+        }
+
         [HttpPost("Auth/")]
         public async Task<ActionResult<Student>> GetByAuth([FromBody] AuthData authData)
         {
@@ -39,9 +46,16 @@ namespace MireaNFCProjectAPI.Controllers
             if (s != null)
                 hash = GetHash(authData.Password);
             if (s == null || s.Password != hash)
+            {
                 return new NotFoundResult();
+            }    
             else
+            {
+                s.IsAccepted = false;
+                s.IsAcceptRequested = true;
+                await context.SaveChangesAsync();
                 return new OkObjectResult(s);
+            }    
         }
 
         [HttpGet("ByGroup/{groupId}")]
@@ -68,10 +82,12 @@ namespace MireaNFCProjectAPI.Controllers
             Student studentToUpdate = await context.Students.FindAsync(student.StudentId);
             if (studentToUpdate != null)
             {
-                studentToUpdate.Email = studentToUpdate.Email;
-                studentToUpdate.GroupId = studentToUpdate.GroupId;
-                studentToUpdate.UserId = studentToUpdate.UserId;
-                studentToUpdate.Password = studentToUpdate.Password;
+                studentToUpdate.Email = student.Email;
+                studentToUpdate.GroupId = student.GroupId;
+                studentToUpdate.UserId = student.UserId;
+                studentToUpdate.Password = student.Password;
+                studentToUpdate.IsAccepted = student.IsAccepted;
+                studentToUpdate.IsAcceptRequested = student.IsAcceptRequested;
             }
             await context.SaveChangesAsync();
         }

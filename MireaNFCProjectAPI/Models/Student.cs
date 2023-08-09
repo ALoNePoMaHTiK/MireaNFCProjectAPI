@@ -7,5 +7,7 @@
         public string Password { get; set; }
         public int UserId { get; set; }
         public string GroupId { get; set; }
+        public bool IsAccepted { get; set; }
+        public bool IsAcceptRequested { get; set; }
     }
 }

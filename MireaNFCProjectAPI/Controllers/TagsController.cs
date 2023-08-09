@@ -25,11 +25,16 @@ namespace MireaNFCProjectAPI.Controllers
         /// <summary>
         /// Получение NFC-метки по серийному номеру
         /// </summary>
-        [HttpGet("{id}")]
-        public async Task<Tag> Get(string id)
+        [HttpGet("{tagId}")]
+        public async Task<IActionResult> Get(string tagId)
         {
             var context = await _contextFactory.CreateDbContextAsync();
-            return await context.Tags.FindAsync(id);
+            var tag = await context.Tags.FindAsync(tagId);
+            if (tag == null)
+            {
+                return new NotFoundResult();
+            }
+            return Ok(tag);
         }
 
         /// <summary>
