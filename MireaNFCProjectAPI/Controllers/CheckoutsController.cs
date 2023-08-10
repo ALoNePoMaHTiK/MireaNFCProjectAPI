@@ -20,7 +20,7 @@ namespace MireaNFCProjectAPI.Controllers
         public async Task<IEnumerable<Checkout>> GetAll()
         {
             var context = await _contextFactory.CreateDbContextAsync();
-            return await context.Checkouts.ToListAsync();
+            return await context.Checkouts.OrderBy(c => c.CheckoutDateTime).Reverse().ToListAsync();
         }
         [HttpGet("{id}")]
         public async Task<Checkout> Get(Guid id)

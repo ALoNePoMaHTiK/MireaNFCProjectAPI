@@ -36,6 +36,17 @@ namespace MireaNFCProjectAPI.Controllers
             }
             return Ok(tag);
         }
+        [HttpGet("{tagId}/{note}")]
+        public async Task<IActionResult> Get(string tagId, string note)
+        {
+            var context = await _contextFactory.CreateDbContextAsync();
+            var tag = await context.Tags.Where(t => t.TagId == tagId && t.Note == note).FirstAsync();
+            if (tag == null)
+            {
+                return new NotFoundResult();
+            }
+            return Ok(tag);
+        }
 
         /// <summary>
         /// Получение списка NFC-меток по идентификатору аудитории
@@ -46,5 +57,7 @@ namespace MireaNFCProjectAPI.Controllers
             var context = await _contextFactory.CreateDbContextAsync();
             return await context.Tags.Where(t => t.RoomId == roomId).ToListAsync();
         }
+
+
     }
 }
