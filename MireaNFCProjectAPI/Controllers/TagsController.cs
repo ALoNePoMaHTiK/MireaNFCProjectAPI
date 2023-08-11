@@ -36,6 +36,19 @@ namespace MireaNFCProjectAPI.Controllers
             }
             return Ok(tag);
         }
+
+        [HttpGet("NewNote/{tagId}")]
+        public async Task<IActionResult> GetNewNote(string tagId)
+        {
+            var context = await _contextFactory.CreateDbContextAsync();
+            var tag = await context.Tags.FindAsync(tagId);
+            if (tag == null)
+            {
+                return new NotFoundResult();
+            }
+            return Ok(tag);
+        }
+
         [HttpGet("{tagId}/{note}")]
         public async Task<IActionResult> Get(string tagId, string note)
         {
@@ -58,6 +71,23 @@ namespace MireaNFCProjectAPI.Controllers
             return await context.Tags.Where(t => t.RoomId == roomId).ToListAsync();
         }
 
-
+        /// <summary>
+        /// Редактирование метки
+        /// </summary>
+        [HttpPut]
+        public async Task<IActionResult> Update([FromBody] Tag tag)
+        {
+            var context = _contextFactory.CreateDbContext();
+            Tag tagToUpdate = await context.Tags.FindAsync(tag.TagId);
+            if (tagToUpdate != null)
+            {
+                tagToUpdate.PlacementDateTime = tag.PlacementDateTime;
+                tagToUpdate.RoomId = tag.RoomId;
+                tagToUpdate.Note = tag.Note;
+                tagToUpdate.IsActive = tag.IsActive; await context.SaveChangesAsync();
+                return new OkResult();
+            }
+            return new NotFoundResult();
+        }
     }
 }

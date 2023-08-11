@@ -37,8 +37,19 @@ namespace MireaNFCProjectAPI.Controllers
             return await context.Students.Where(s => s.IsAcceptRequested == isAcceptRequested).ToListAsync();
         }
 
+        [HttpPost("CkeckAuth")]
+        public async Task<ActionResult<Student>> CheckAuth([FromBody] AuthData authData)
+        {
+            var context = await _contextFactory.CreateDbContextAsync();
+            Student s = await context.Students.Where(s => s.Email == authData.Email && s.Password == authData.Password).FirstOrDefaultAsync();
+            if (s == null)
+                return new NotFoundResult();
+            else
+                return new OkObjectResult(s);
+        }
+
         [HttpPost("Auth/")]
-        public async Task<ActionResult<Student>> GetByAuth([FromBody] AuthData authData)
+        public async Task<ActionResult<Student>> Auth([FromBody] AuthData authData)
         {
             var context = await _contextFactory.CreateDbContextAsync();
             Student s = await context.Students.Where(s => s.Email == authData.Email).FirstOrDefaultAsync();
@@ -76,7 +87,7 @@ namespace MireaNFCProjectAPI.Controllers
         }
 
         [HttpPut]
-        public async Task Update([FromBody] Student student)
+        public async Task<IActionResult> Update([FromBody] Student student)
         {
             var context = _contextFactory.CreateDbContext();
             Student studentToUpdate = await context.Students.FindAsync(student.StudentId);
@@ -88,8 +99,10 @@ namespace MireaNFCProjectAPI.Controllers
                 studentToUpdate.Password = student.Password;
                 studentToUpdate.IsAccepted = student.IsAccepted;
                 studentToUpdate.IsAcceptRequested = student.IsAcceptRequested;
+                await context.SaveChangesAsync();
+                return new OkResult();
             }
-            await context.SaveChangesAsync();
+            return new NotFoundResult();
         }
 
         static private string GetHash(string message)
