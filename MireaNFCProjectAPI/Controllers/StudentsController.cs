@@ -37,7 +37,7 @@ namespace MireaNFCProjectAPI.Controllers
             return await context.Students.Where(s => s.IsAcceptRequested == isAcceptRequested).ToListAsync();
         }
 
-        [HttpPost("CkeckAuth")]
+        [HttpPost("CheckAuth")]
         public async Task<ActionResult<Student>> CheckAuth([FromBody] AuthData authData)
         {
             var context = await _contextFactory.CreateDbContextAsync();

@@ -23,10 +23,15 @@ namespace MireaNFCProjectAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<User> Get(string id)
+        public async Task<ActionResult<User>> Get(int id)
         {
             var context = await _contextFactory.CreateDbContextAsync();
-            return await context.Users.FindAsync(id);
+            var user = await context.Users.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound(); 
+            }
+            return Ok(user);
         }
     }
 }
