@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+option csharp_namespace = "MireaNFCProjectAPI";
+
+package MireaNFCProjectAPI;
+
+service TimeTableService {
+  rpc GetMeInfo (GetMeInfoRequest) returns (GetMeInfoResponse);
+}
+
+message GetMeInfoRequest {
+    string appUrl = 1; // Адрес, на который будет перенаправлен пользователь после входа в акуант
+    string logourUrl = 2; // Адрес, на который будет перенаправлен пользователь после выхода из акуанта. Если не указан - будет использован appUrl
+}
+
+message VoidParam {}
+
+message NotauthorizedMessage {
+
+    message Notauthorized {
+        string loginUrl = 1;
+    }
+
+    Notauthorized notAuthorized = 1;
+}
+
+message GetMeInfoResponse {
+    oneof result {
+        AuthorizedInfo authorized = 1;
+        NotAuthorizedInfo notAuthorized = 2;
+    }
+}
+
+message AuthorizedInfo {
+    UserInfo user = 1;
+    string logoutUrl = 2;
+}
+
+message UserInfo {
+    string userId = 1;
+    string firstname = 2;
+    string lastname = 3;
+    string middlename = 4;
+    repeated Claim claims = 5;
+}
+
+message Claim {
+    string Type = 1;
+    string Value = 2;
+}
+
+message NotAuthorizedInfo {
+    string loginUrl = 1;
+}
