@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.OpenApi.Models;
+using MireaNFCProjectAPI;
 using MireaNFCProjectAPI.Contexts;
 using MireaNFCProjectAPI.Models;
+using RtuTc.RtuAttend.App;
 
 var builder = WebApplication.CreateBuilder(args);
 string connectionString = "Server=msuniversity.ru,1450;Database=nfcattend;TrustServerCertificate=True;User Id=nfcattend;Password=nfcattend;";
@@ -15,9 +17,13 @@ builder.Services.AddDbContextFactory<StudentContext>(o => o.UseSqlServer(connect
 builder.Services.AddDbContextFactory<RoomContext>(o => o.UseSqlServer(connectionString));
 builder.Services.AddDbContextFactory<CheckoutContext>(o => o.UseSqlServer(connectionString));
 
+var attendanceGrpcAddress = new Uri("https://rtu-attends.rtu-tc.ru");
+builder.Services.AddGrpcClient<UserService.UserServiceClient>(config => config.Address = attendanceGrpcAddress);
+builder.Services.AddGrpcClient<ElderService.ElderServiceClient>(config => config.Address = attendanceGrpcAddress);
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen( c =>
+builder.Services.AddSwaggerGen(c =>
 {
     c.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
     {
@@ -27,7 +33,7 @@ builder.Services.AddSwaggerGen( c =>
         In = ParameterLocation.Header,
         Scheme = "ApiKeyScheme"
     });
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement{{ 
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement{{
             new OpenApiSecurityScheme(){
             Reference = new OpenApiReference
             {
