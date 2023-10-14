@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\TimeTable.proto" GrpcServices="TimeTableService" />
+    <Protobuf Include="Protos\user.proto" GrpcServices="UserService" />
     <Protobuf Include="Protos\greet.proto" GrpcServices="Greeter" />
   </ItemGroup>
 
