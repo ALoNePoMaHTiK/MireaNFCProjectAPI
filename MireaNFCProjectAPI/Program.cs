@@ -16,6 +16,7 @@ builder.Services.AddDbContextFactory<GroupContext>(o => o.UseSqlServer(connectio
 builder.Services.AddDbContextFactory<StudentContext>(o => o.UseSqlServer(connectionString));
 builder.Services.AddDbContextFactory<RoomContext>(o => o.UseSqlServer(connectionString));
 builder.Services.AddDbContextFactory<CheckoutContext>(o => o.UseSqlServer(connectionString));
+builder.Services.AddDbContextFactory<LessonContext>(o => o.UseSqlServer(connectionString));
 
 var attendanceGrpcAddress = new Uri("https://rtu-attends.rtu-tc.ru");
 builder.Services.AddGrpcClient<UserService.UserServiceClient>(config => config.Address = attendanceGrpcAddress);
