@@ -126,14 +126,5 @@ namespace MireaNFCProjectAPI.Controllers
 
             return Ok(new { getMeResponse, availableVisitingLogs, visitingLogResponse, lessons, infoForCreateLesson, createLessonResponse, attendances, updateAttendancesResponse });
         }
-
-        [HttpGet("/Test")]
-        public string Test()
-        {
-            var channel = GrpcChannel.ForAddress("http://127.0.0.1:5190");
-            var client = new Greeter.GreeterClient(channel);
-            string responce = client.SayHello(new HelloRequest()).Message;
-            return responce;
-        }
     }
 }
